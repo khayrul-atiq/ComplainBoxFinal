@@ -29,13 +29,11 @@ public class SignUpActivity extends AppCompatActivity {
 
     private static final String FILENAME = "com.mycompany.myAppName";
 
-    EditText signUpUsername,signUpEmail,signUpPassword,signUpConfirmPassword;
+    private EditText signUpUsername,signUpEmail,signUpPassword,signUpConfirmPassword;
 
-    String username,email,password,confirmPassword;
+    private String username,email,password,confirmPassword,regex = "[a-zA-Z0-9\\._\\-]{3,}";
 
-    Button signupbutton;
-
-    String regex = "[a-zA-Z0-9\\._\\-]{3,}";
+    private Button signUpButton;
 
 
     @Override
@@ -43,13 +41,12 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-
         signUpUsername = findViewById(R.id.signUpUsername);
         signUpEmail = findViewById(R.id.signUpEmail);
         signUpPassword = findViewById(R.id.signUpPassword);
         signUpConfirmPassword = findViewById(R.id.signUpConfirmPassword);
 
-        signupbutton = findViewById(R.id.signUpButton);
+        signUpButton = findViewById(R.id.signUpButton);
 
         signUpUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -123,31 +120,25 @@ public class SignUpActivity extends AppCompatActivity {
 
         Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
         startActivity(intent);
-
         finish();
+
     }
 
     public void signupButtonclick(View view){
 
         if (!validate()) {
-            showToastMessage("sign up failed");
-            //onSignUpFailed();
+            showToastMessageAndEnableSignUpButton("sign up failed");
             return;
         }
 
-        signupbutton.setEnabled(false);
-
-        /// check in server
-
+        signUpButton.setEnabled(false);
         storeUserInformationInServer();
-       // signupbutton.setEnabled(true);
 
     }
 
 
 
     private void storeUserInformationInServer(){
-
 
         RequestQueue MyRequestQueue = Volley.newRequestQueue(this);
 
@@ -185,7 +176,7 @@ public class SignUpActivity extends AppCompatActivity {
                         //pDialog.dismiss();
                     }
                     else{
-                        showToastMessage(json.getString("message"));
+                        showToastMessageAndEnableSignUpButton(json.getString("message"));
                         //Toast.makeText(SignUpActivity.this,json.getString("message"),Toast.LENGTH_SHORT).show();
                     }
 
@@ -201,7 +192,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 //This code is executed if there is an error.
                 pDialog.dismiss();
-                showToastMessage("bad network connection");
+                showToastMessageAndEnableSignUpButton("bad network connection");
                 //Toast.makeText(SignUpActivity.this, error.getMessage(),Toast.LENGTH_SHORT).show();
             }
         }) {
@@ -217,12 +208,13 @@ public class SignUpActivity extends AppCompatActivity {
 
         MyRequestQueue.add(MyStringRequest);
 
-
     }
 
-    private void showToastMessage(String message){
+    private void showToastMessageAndEnableSignUpButton(String message){
+
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
-        signupbutton.setEnabled(true);
+        signUpButton.setEnabled(true);
+
     }
 
 
@@ -230,12 +222,13 @@ public class SignUpActivity extends AppCompatActivity {
 
         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
         startActivity(intent);
-
         finish();
+
     }
 
 
     private boolean validate() {
+
         boolean valid = true;
 
         username = signUpUsername.getText().toString();
@@ -243,18 +236,15 @@ public class SignUpActivity extends AppCompatActivity {
         password = signUpPassword.getText().toString();
         confirmPassword = signUpConfirmPassword.getText().toString();
 
-
         if (username.isEmpty() || !username.matches(regex)) {
             signUpUsername.setError("username contains alphanumeric letter greater than 3");
             valid = false;
         }
 
-
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             signUpEmail.setError("enter a valid email address");
             valid = false;
         }
-
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
             signUpPassword.setError("between 4 and 10 alphanumeric characters");
@@ -267,23 +257,15 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         return valid;
+
     }
 
     public void skipButtonClickSignUp(View view){
+
         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+
     }
-
-
-    private void onSignUpFailed() {
-        Toast.makeText(getBaseContext(), "SignUp failed", Toast.LENGTH_LONG).show();
-
-        signupbutton.setEnabled(true);
-    }
-
-
-
-
 
 }
