@@ -25,10 +25,11 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText email,password;
-    Button loginButton;
+    private EditText inputEmail,inputPassword;
 
-    String inputEmail,inputPassword;
+    private Button loginButton;
+
+    private String email,password;
 
     private ProgressDialog pDialog;
 
@@ -40,20 +41,22 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        email = findViewById(R.id.email);
-        password = findViewById(R.id.password);
+        initialize();
+
+        inputEmail = findViewById(R.id.email);
+        inputPassword = findViewById(R.id.password);
         loginButton  = findViewById(R.id.loginButton);
 
-        email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        inputEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
 
                 if (!hasFocus){
 
-                    inputEmail = email.getText().toString();
+                    email = inputEmail.getText().toString();
 
-                    if (inputEmail.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(inputEmail).matches()) {
-                        email.setError("enter a valid email address");
+                    if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                        inputEmail.setError("enter a valid email address");
 
                     }
                 }
@@ -61,16 +64,16 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        inputPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
 
                 if(!hasFocus){
 
-                    inputPassword = password.getText().toString();
+                    password = inputPassword.getText().toString();
 
-                    if (inputPassword.isEmpty() || inputPassword.length() < 4 || inputPassword.length() > 10) {
-                        password.setError("between 4 and 10 alphanumeric characters");
+                    if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+                        inputPassword.setError("between 4 and 10 alphanumeric characters");
                     }
 
                 }
@@ -185,16 +188,16 @@ public class LoginActivity extends AppCompatActivity {
 
         boolean valid = true;
 
-        inputEmail = email.getText().toString();
-        inputPassword = password.getText().toString();
+        email = inputEmail.getText().toString();
+        password = inputPassword.getText().toString();
 
-        if (inputEmail.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(inputEmail).matches()) {
-            email.setError("enter a valid email address");
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            inputEmail.setError("enter a valid email address");
             valid = false;
         }
 
-        if (inputPassword.isEmpty() || inputPassword.length() < 4 || inputPassword.length() > 10) {
-            password.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+            inputPassword.setError("between 4 and 10 alphanumeric characters");
             valid = false;
         }
 

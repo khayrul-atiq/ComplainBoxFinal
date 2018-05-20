@@ -34,7 +34,7 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        initializeLocalStoredValueAndLoginUrl();
+        initialize();
 
         if(email.equals(DEFAULT_EMAIL)){
 
@@ -48,7 +48,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     }
 
-    private void initializeLocalStoredValueAndLoginUrl(){
+    private void initialize(){
 
         FILENAME = getResources().getString(R.string.local_storage_file_name);
         url_login = getResources().getString(R.string.domain)+getResources().getString(R.string.login_url_path);
