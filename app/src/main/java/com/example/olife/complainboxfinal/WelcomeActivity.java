@@ -22,13 +22,33 @@ import java.util.Map;
 
 public class WelcomeActivity extends AppCompatActivity {
 
-    private static  String FILENAME,url_login,TAG_SUCCESS,TAG_USERNAME,TAG_EMAIL,TAG_PASSWORD,DEFAULT_EMAIL,DEFAULT_PASSWORD;
+    private static String FILENAME,url_login,TAG_SUCCESS,TAG_USERNAME,TAG_EMAIL,TAG_PASSWORD,DEFAULT_EMAIL,DEFAULT_PASSWORD;
 
     private String email, password;
 
     private SharedPreferences prefs = null;
 
-    private void initializeLocalStorageNameAndUrl(){
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_welcome);
+
+        initializeLocalStoredValueAndLoginUrl();
+
+        if(email.equals(DEFAULT_EMAIL)){
+
+            onAutomaticLoginFailed();
+        }
+
+        else{
+
+            automaticLoginCheck();
+        }
+
+    }
+
+    private void initializeLocalStoredValueAndLoginUrl(){
 
         FILENAME = getResources().getString(R.string.local_storage_file_name);
         url_login = getResources().getString(R.string.domain)+getResources().getString(R.string.login_url_path);
@@ -40,29 +60,10 @@ public class WelcomeActivity extends AppCompatActivity {
         DEFAULT_EMAIL = getResources().getString(R.string.default_email);
         DEFAULT_PASSWORD = getResources().getString(R.string.default_password);
 
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
-
-        initializeLocalStorageNameAndUrl();
-
         prefs = getSharedPreferences(FILENAME, MODE_PRIVATE);
 
-        if(prefs.getString(TAG_EMAIL, DEFAULT_EMAIL).equals(DEFAULT_EMAIL)){
-
-            onAutomaticLoginFailed();
-        }
-
-        else{
-            email = prefs.getString(TAG_EMAIL, DEFAULT_EMAIL);
-            password = prefs.getString(TAG_PASSWORD, DEFAULT_PASSWORD);
-
-            automaticLoginCheck();
-        }
-
+        email = prefs.getString(TAG_EMAIL, DEFAULT_EMAIL);
+        password = prefs.getString(TAG_PASSWORD, DEFAULT_PASSWORD);
     }
 
     private void automaticLoginCheck(){
@@ -92,7 +93,7 @@ public class WelcomeActivity extends AppCompatActivity {
                         editor.putString(TAG_PASSWORD,json.getString(TAG_PASSWORD));
 
                         editor.apply();
-                        onAutomationLoginSuccess();
+                        onAutomatiocLoginSuccess();
                     }
                     else{
                         onAutomaticLoginFailed();
@@ -131,7 +132,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     }
 
-    public void onAutomationLoginSuccess() {
+    public void onAutomatiocLoginSuccess() {
 
         Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
         startActivity(intent);
