@@ -6,6 +6,9 @@
     <string name="local_storage_file_name">com.mycompany.myAppName</string>
     <string name="login_url_path">/android/login.php</string>
 
+    <string name="signup_url_path">/android/register.php</string>
+
+
     <string name="success_tag">success</string>
 
 

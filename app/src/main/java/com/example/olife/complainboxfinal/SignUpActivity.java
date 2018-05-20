@@ -27,13 +27,15 @@ public class SignUpActivity extends AppCompatActivity {
 
     private ProgressDialog pDialog;
 
-    private static final String FILENAME = "com.mycompany.myAppName";
-
     private EditText signUpUsername,signUpEmail,signUpPassword,signUpConfirmPassword;
 
     private String username,email,password,confirmPassword,regex = "[a-zA-Z0-9\\._\\-]{3,}";
 
     private Button signUpButton;
+
+    private static String FILENAME,url_sign_up,TAG_SUCCESS,TAG_USERNAME,TAG_EMAIL,TAG_PASSWORD;
+
+    private SharedPreferences prefs = null;
 
 
     @Override
@@ -41,12 +43,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        signUpUsername = findViewById(R.id.signUpUsername);
-        signUpEmail = findViewById(R.id.signUpEmail);
-        signUpPassword = findViewById(R.id.signUpPassword);
-        signUpConfirmPassword = findViewById(R.id.signUpConfirmPassword);
-
-        signUpButton = findViewById(R.id.signUpButton);
+        initialize();
 
         signUpUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -114,6 +111,26 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
+    private void initialize(){
+
+        FILENAME = getResources().getString(R.string.local_storage_file_name);
+        url_sign_up = getResources().getString(R.string.domain)+getResources().getString(R.string.signup_url_path);
+        TAG_USERNAME = getResources().getString(R.string.username_tag);
+        TAG_EMAIL = getResources().getString(R.string.email_tag);
+        TAG_PASSWORD = getResources().getString(R.string.password_tag);
+        TAG_SUCCESS = getResources().getString(R.string.success_tag);
+
+        prefs = getSharedPreferences(FILENAME, MODE_PRIVATE);
+
+        signUpUsername = findViewById(R.id.signUpUsername);
+        signUpEmail = findViewById(R.id.signUpEmail);
+        signUpPassword = findViewById(R.id.signUpPassword);
+        signUpConfirmPassword = findViewById(R.id.signUpConfirmPassword);
+
+        signUpButton = findViewById(R.id.signUpButton);
+
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -147,7 +164,6 @@ public class SignUpActivity extends AppCompatActivity {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        String url_sign_up = "http://192.168.1.109/android/register.php";
 
         StringRequest MyStringRequest = new StringRequest(Request.Method.POST, url_sign_up , new Response.Listener<String>() {
             @Override
@@ -158,7 +174,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                     JSONObject json = new JSONObject(response);
 
-                    int success = json.getInt("success");
+                    int success = json.getInt(TAG_SUCCESS);
 
                     if(success==1){
 
@@ -167,9 +183,9 @@ public class SignUpActivity extends AppCompatActivity {
 
                         SharedPreferences.Editor editor= mySharedPreferences.edit();
 
-                        editor.putString("username",username);
-                        editor.putString("email",email);
-                        editor.putString("password",password);
+                        editor.putString(TAG_USERNAME,username);
+                        editor.putString(TAG_EMAIL,email);
+                        editor.putString(TAG_PASSWORD,password);
 
                         editor.apply();
                         onSignupSuccess();
@@ -199,9 +215,9 @@ public class SignUpActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> MyData = new HashMap<>();
                 //MyData.put("category", title);
-                MyData.put("username",username);
-                MyData.put("email",email);
-                MyData.put("password",password);
+                MyData.put(TAG_USERNAME,username);
+                MyData.put(TAG_EMAIL,email);
+                MyData.put(TAG_PASSWORD,password);
                 return MyData;
             }
         };

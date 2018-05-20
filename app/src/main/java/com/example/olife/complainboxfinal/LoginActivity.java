@@ -33,8 +33,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private ProgressDialog pDialog;
 
-    private static final String FILENAME = "com.mycompany.myAppName";
+    private static String FILENAME,url_login,TAG_SUCCESS,TAG_USERNAME,TAG_EMAIL,TAG_PASSWORD;
 
+    private SharedPreferences prefs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +44,6 @@ public class LoginActivity extends AppCompatActivity {
 
         initialize();
 
-        inputEmail = findViewById(R.id.email);
-        inputPassword = findViewById(R.id.password);
-        loginButton  = findViewById(R.id.loginButton);
 
         inputEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -84,7 +82,22 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private void initialize(){
 
+        FILENAME = getResources().getString(R.string.local_storage_file_name);
+        url_login = getResources().getString(R.string.domain)+getResources().getString(R.string.login_url_path);
+        TAG_USERNAME = getResources().getString(R.string.username_tag);
+        TAG_EMAIL = getResources().getString(R.string.email_tag);
+        TAG_PASSWORD = getResources().getString(R.string.password_tag);
+        TAG_SUCCESS = getResources().getString(R.string.success_tag);
+
+        prefs = getSharedPreferences(FILENAME, MODE_PRIVATE);
+
+        inputEmail = findViewById(R.id.email);
+        inputPassword = findViewById(R.id.password);
+        loginButton  = findViewById(R.id.loginButton);
+
+    }
 
     public void loginbuttonclick(View view){
 
@@ -112,8 +125,6 @@ public class LoginActivity extends AppCompatActivity {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        String url_login = "http://192.168.1.109/android/login.php";
-
         StringRequest MyStringRequest = new StringRequest(Request.Method.POST, url_login , new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -123,19 +134,15 @@ public class LoginActivity extends AppCompatActivity {
 
                     JSONObject json = new JSONObject(response);
                     System.out.println(response);
-                    int success = json.getInt("success");
+                    int success = json.getInt(TAG_SUCCESS);
 
                     if(success==1){
 
+                        SharedPreferences.Editor editor= prefs.edit();
 
-                        SharedPreferences mySharedPreferences ;
-                        mySharedPreferences=getSharedPreferences(FILENAME,MODE_PRIVATE);
-
-                        SharedPreferences.Editor editor= mySharedPreferences.edit();
-
-                        editor.putString("username",json.getString("username"));
-                        editor.putString("email",json.getString("email"));
-                        editor.putString("password",json.getString("password"));
+                        editor.putString(TAG_USERNAME,json.getString(TAG_USERNAME));
+                        editor.putString(TAG_EMAIL,json.getString(TAG_EMAIL));
+                        editor.putString(TAG_PASSWORD,json.getString(TAG_PASSWORD));
 
                         editor.apply();
                         //pDialog.dismiss();
@@ -166,8 +173,8 @@ public class LoginActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> MyData = new HashMap<>();
                 //MyData.put("category", title);
-                MyData.put("email",inputEmail);
-                MyData.put("password",inputPassword);
+                MyData.put(TAG_EMAIL,email);
+                MyData.put(TAG_PASSWORD,password);
                 return MyData;
             }
         };

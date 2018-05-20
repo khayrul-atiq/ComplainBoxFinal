@@ -83,10 +83,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
                     if(success==1){
 
-                        SharedPreferences mySharedPreferences ;
-                        mySharedPreferences=getSharedPreferences(FILENAME,MODE_PRIVATE);
-
-                        SharedPreferences.Editor editor= mySharedPreferences.edit();
+                        SharedPreferences.Editor editor= prefs.edit();
 
                         editor.putString(TAG_USERNAME,json.getString(TAG_USERNAME));
                         editor.putString(TAG_EMAIL,json.getString(TAG_EMAIL));
