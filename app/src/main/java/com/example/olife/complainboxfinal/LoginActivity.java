@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (!validate()) {
             //onLoginFailed();
-            showToastMessage("login failed, enter valid email and password");
+            showToastMessageAndEnableSignUpButton("login failed, enter valid email and password");
             return;
         }
 
@@ -101,7 +101,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void loginCheckInServer(){
-
 
         RequestQueue MyRequestQueue = Volley.newRequestQueue(this);
 
@@ -140,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
                         onLoginSuccess();
                     }
                     else{
-                        showToastMessage(json.getString("message"));
+                        showToastMessageAndEnableSignUpButton(json.getString("message"));
                         //Toast.makeText(LoginActivity.this,json.getString("message"),Toast.LENGTH_SHORT).show();
                     }
 
@@ -155,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 //This code is executed if there is an error.
                 //Toast.makeText(LoginActivity.this, error.getMessage(),Toast.LENGTH_SHORT).show();
-                showToastMessage("bad network connection");
+                showToastMessageAndEnableSignUpButton("bad network connection");
                 pDialog.dismiss();
                 //Toast.makeText(LoginActivity.this, "bad network connection",Toast.LENGTH_SHORT).show();
                 //loginButton.setEnabled(true);
@@ -172,22 +171,18 @@ public class LoginActivity extends AppCompatActivity {
 
         MyRequestQueue.add(MyStringRequest);
 
-
     }
-
-
-
-
 
     public void onLoginSuccess() {
 
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
-
         finish();
+
     }
 
     public boolean validate() {
+
         boolean valid = true;
 
         inputEmail = email.getText().toString();
@@ -204,24 +199,31 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return valid;
+
     }
 
-    private void showToastMessage(String message){
+    private void showToastMessageAndEnableSignUpButton(String message){
+
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
         loginButton.setEnabled(true);
+
     }
 
     public void skipButtonClick(View view){
+
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+
     }
 
 
     public void signUpClick(View view){
+
         Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
         startActivity(intent);
         finish();
+
     }
 
     public void forgotPasswordclick(View view){
